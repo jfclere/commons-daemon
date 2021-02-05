@@ -39,6 +39,10 @@
   </properties>
   <body>
     <release version="1.2.5" date="2021-MM-DD" description="Bug fix release">
+      <action issue="DAEMON-430" type="fix" dev="jfclere">
+        Procrun --StopTimeout can be used to define the time that procrun waits for service to exit,
+        but INFINITE timeout was using instead.
+      </action>
       <action type="add" dev="ggregory" due-to="John Patrick">
         Enable Dependabot #20.
       </action>    
