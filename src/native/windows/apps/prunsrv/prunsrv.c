@@ -1387,7 +1387,7 @@ cleanup:
         ULARGE_INTEGER s, e;
         DWORD    nms;
         /* Wait to give it a chance to die naturally, then kill it. */
-        apxLogWrite(APXLOG_MARK_DEBUG "Waiting for worker to die naturally...");
+        apxLogWrite(APXLOG_MARK_DEBUG "Waiting %d ms for worker to die naturally...", timeout);
         GetSystemTimeAsFileTime(&fts);
         rv = apxHandleWait(gWorker, timeout, TRUE);
         GetSystemTimeAsFileTime(&fte);
