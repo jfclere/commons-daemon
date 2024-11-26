@@ -1221,7 +1221,7 @@ static DWORD WINAPI serviceStop(LPVOID lpParameter)
     APXHANDLE hWorker = NULL;
     DWORD  rv = 0;
     BOOL   wait_to_die = FALSE;
-    DWORD  timeout     = SO_STOPTIMEOUT * 1000;
+    DWORD  timeout     = SO_STOPTIMEOUT;
     DWORD  dwCtrlType  = (DWORD)((BYTE *)lpParameter - (BYTE *)0);
 
     apxLogWrite(APXLOG_MARK_INFO "Stopping service...");
@@ -1232,6 +1232,8 @@ static DWORD WINAPI serviceStop(LPVOID lpParameter)
     }
     if (timeout > 0x7FFFFFFF)
         timeout = INFINITE;     /* If the timeout was '-1' wait forewer */
+    else
+        timeout = SO_STOPTIMEOUT * 1000;
     if (_jni_shutdown) {
         if (!IS_VALID_STRING(SO_STARTPATH) && IS_VALID_STRING(SO_STOPPATH)) {
             /* If the Working path is specified change the current directory
@@ -1858,7 +1860,7 @@ void WINAPI serviceMain(DWORD argc, LPTSTR *argv)
 
         /* Ensure that shutdown thread exits before us */
         apxLogWrite(APXLOG_MARK_DEBUG "Waiting for ShutdownEvent.");
-        reportServiceStatus(SERVICE_STOP_PENDING, NO_ERROR, ONE_MINUTE);
+        reportServiceStatus(SERVICE_STOP_PENDING, NO_ERROR, ONE_MINUTE * 2);
         WaitForSingleObject(gShutdownEvent, ONE_MINUTE);
         apxLogWrite(APXLOG_MARK_DEBUG "ShutdownEvent signaled.");
         CloseHandle(gShutdownEvent);
