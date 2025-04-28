@@ -532,10 +532,13 @@ will add the new value(s) to any existing value(s).
     <td>--StopTimeout</td>
     <td>60 seconds</td>
     <td>Defines the timeout in seconds that procrun waits for service
-        to receive the stop command and exit gracefully.
-        Note that after twice the timeout and 15 seconds the service
-        processes will be killed by procrun. Negative values are
-        replaced by the registry value of WaitToKillServiceTimeout.</td>
+        to stop.
+        Negative values are replaced by the registry value of
+        WaitToKillServiceTimeout.
+        Note: Make sure you use a value big enough to give time for
+        procrun to stop the service. Once the time out is elapsed,
+        procrun will try to kill the whole process tree the service
+        has created.</td>
     </tr>
     <tr>
     <td>--LogPath</td>
