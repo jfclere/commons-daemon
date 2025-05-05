@@ -39,7 +39,7 @@ rem the test are OK once test.bat Done!!! is displayed at the test of the bat sc
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL EnableDelayedExpansion
 SET mypath=%cd%
-WHERE /r ..\..\ prunsrv.exe > 1>in.txt
+WHERE /r ..\..\ prunsrv.exe 1>in.txt
 SET /p myserv=<in.txt
 WHERE /r ..\..\..\..\..\..\..\target *-tests.jar  1>in.txt
 SET /r myjar=<in.txt
