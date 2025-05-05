@@ -39,14 +39,10 @@ rem the test are OK once test.bat Done!!! is displayed at the test of the bat sc
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL EnableDelayedExpansion
 SET mypath=%cd%
-ATTRIB /s ..\..\prunsrv.exe
-FOR /F "tokens=3 USEBACKQ" %%A IN (`ATTRIB /s ..\..\prunsrv.exe`) DO (
-  SET myserv=%%A
-)
-Attrib ..\..\..\..\..\..\..\target\*-tests.jar
-FOR /F "tokens=3 USEBACKQ" %%A IN (`Attrib ..\..\..\..\..\..\..\target\*-tests.jar`) DO (
-  SET myjar=%%A
-)
+WHERE /r ..\..\ prunsrv.exe > 1>in.txt
+SET /p myserv=<in.txt
+WHERE /r ..\..\..\..\..\..\..\target *-tests.jar  1>in.txt
+SET /r myjar=<in.txt
 ECHO "myserv: %myserv%"
 ECHO "myjar: %myjar%"
 ECHO "%mypath: %mypath%"
