@@ -39,15 +39,13 @@ rem the test are OK once test.bat Done!!! is displayed at the test of the bat sc
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL EnableDelayedExpansion
 SET mypath=%cd%
-FOR /F "tokens=3 USEBACKQ" %%A IN (`ATTRIB /s ..\..\prunsrv.exe`) DO (
-  SET myserv=%%A
-)
-FOR /F "tokens=3 USEBACKQ" %%A IN (`Attrib ..\..\..\..\..\..\..\target\*-tests.jar`) DO (
-  SET myjar=%%A
-)
-ECHO %myserv%
-ECHO %myjar%
-ECHO %mypath%
+WHERE /r ..\..\ prunsrv.exe 1>in.txt
+SET /p myserv=<in.txt
+WHERE /r ..\..\..\..\..\..\..\target *-tests.jar  1>in.txt
+SET /p myjar=<in.txt
+ECHO "myserv: %myserv%"
+ECHO "myjar: %myjar%"
+ECHO "%mypath: %mypath%"
 
 echo "cleaning..."
 call mybanner stopping
@@ -83,6 +81,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "No timeout No wait stop failed"
+  %myserv% //PS//TestService
   exit 1
 )
 
@@ -117,6 +116,7 @@ call mybanner "stopping timeout 10 and wait 60"
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "timeout 10 and wait 60 failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
@@ -126,7 +126,9 @@ rem the client will take 60 sec to stop the server
 echo ""
 call mybanner "install service with timeout 10 and 60+60 sec wait"
 echo ""
-%myserv% //IS//TestService --Description="Procrun tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=exe --StartPath=%mypath% --StartImage=cmd.exe ++StartParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon" --StopMode=exe --StopPath=%mypath% --StopImage=cmd.exe ++StopParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon 4" --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto --StopTimeout 10
+mkdir %mypath%\log
+icacls %mypath%\log /grant Everyone:F
+%myserv% //IS//TestService --Description="Procrun tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=exe --StartPath=%mypath% --StartImage=cmd.exe ++StartParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon" --StopMode=exe --StopPath=%mypath% --StopImage=cmd.exe ++StopParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon 4" --LogPath=%mypath%\log --LogLevel=Debug --StdOutput=auto --StdError=auto --StopTimeout 10
 if %errorlevel% neq 0 (
   echo "install service with timeout 10 and 60+60 sec wait failed"
   exit 1
@@ -137,6 +139,10 @@ call mybanner "stopping service with timeout 10 and 60+60 sec wait"
 %myserv% //SS//TestService
 if %errorlevel% equ 0 (
   echo "timeout 10 and wait 60+60 should have failed"
+  %myserv% //PS//TestService
+  dir %mypath%
+  dir %mypath%\log
+  type %mypath%\log\*.log
   exit 1
 )
 
@@ -145,6 +151,7 @@ rem procrun kills the child processes
 call waituntilstop
 if %errorlevel% neq 0 (
   echo "Not stopped"
+  %myserv% //PS//TestService
   exit 1
 )
 
@@ -156,6 +163,7 @@ if %errorlevel% equ 9 (
   if %errorlevel% neq 0 (
     echo "delete failed"
     echo "%errorlevel%"
+    %myserv% //PS//TestService
     exit 1
   )
 )
@@ -176,6 +184,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "java service tests timeout 10 and wait 60 failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
@@ -183,8 +192,10 @@ call deleteservice
 rem install jvm service with notimeout and no wait
 echo ""
 echo "install jvm service with notimeout and no wait"
+echo "JAVA_HOME : %JAVA_HOME%"
+echo "JAVA_HOME_21_X64 : %JAVA_HOME_21_X64%"
 echo ""
-%myserv% //IS//TestService --Description="Procrun jvm tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=jvm --StartPath=%mypath% --StartClass=org.apache.commons.daemon.ProcrunDaemon --StartMethod=start ++StartParams=procstart --StopMode=jvm --StopClass=org.apache.commons.daemon.ProcrunDaemon --StopMethod=stop ++StopParams 1 --Classpath=%myjar% --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto
+%myserv% //IS//TestService --Description="Procrun jvm tests" --DisplayName="Test Service" --Install=%myserv% --JavaHome %JAVA_HOME% --StartMode=jvm --StartPath=%mypath% --StartClass=org.apache.commons.daemon.ProcrunDaemon --StartMethod=start ++StartParams=procstart --StopMode=jvm --StopClass=org.apache.commons.daemon.ProcrunDaemon --StopMethod=stop ++StopParams 1 --Classpath=%myjar% --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto
 if %errorlevel% neq 0 (
   echo "install failed"
   exit 1
@@ -195,6 +206,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "jvm service tests notimeout and no wait failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
@@ -203,7 +215,7 @@ rem install jvm service with 10 timeout and 60 wait
 echo ""
 echo "install jvm service with 10 timeout and 60 wait"
 echo ""
-%myserv% //IS//TestService --Description="Procrun jvm tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=jvm --StartPath=%mypath% --StartClass=org.apache.commons.daemon.ProcrunDaemon --StartMethod=start ++StartParams=procstart --StopMode=jvm --StopClass=org.apache.commons.daemon.ProcrunDaemon --StopMethod=stop ++StopParams 3 --Classpath=%myjar% --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto --StopTimeout=10
+%myserv% //IS//TestService --Description="Procrun jvm tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=jvm --JavaHome %JAVA_HOME% --StartPath=%mypath% --StartClass=org.apache.commons.daemon.ProcrunDaemon --StartMethod=start ++StartParams=procstart --StopMode=jvm --StopClass=org.apache.commons.daemon.ProcrunDaemon --StopMethod=stop ++StopParams 3 --Classpath=%myjar% --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto --StopTimeout=10
 if %errorlevel% neq 0 (
   echo "install failed"
   exit 1
@@ -212,8 +224,12 @@ call startservice
 call testservice
 call mybanner stopping
 %myserv% //SS//TestService
-if %errorlevel% neq 0 (
-  echo "jvm service tests 10 imeout and 60 wait failed"
+if %errorlevel% equ 0 (
+  echo "jvm service tests 10 timeout and 60 wait should have failed"
+  %myserv% //PS//TestService
+  dir %mypath%
+  dir %mypath%\log
+  type %mypath%\log\*.log
   exit 1
 )
 call deleteservice

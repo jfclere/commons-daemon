@@ -1424,13 +1424,15 @@ cleanup:
     apxLogWrite(APXLOG_MARK_DEBUG "Waited %d timeout (%d)", waited, timeout);
     if (timeout > waited) {
         timeout = timeout - waited;
+        /* renew the hint message */
+        reportServiceStatus(SERVICE_STOP_PENDING, NO_ERROR, timeout);
     } else {
         /* something is wrong, the timeout is too small */
-        apxLogWrite(APXLOG_MARK_DEBUG "Waiting more than the specified timeout (%d)", timeout);
+        apxLogWrite(APXLOG_MARK_DEBUG "Waiting more than the specified timeout TEST (%d)", timeout);
+        /* tell we fail */
+        reportServiceStatus(SERVICE_STOP_PENDING, ERROR_SERVICE_REQUEST_TIMEOUT, 0);
     }
         
-    /* renew the hint message */
-    reportServiceStatus(SERVICE_STOP_PENDING, NO_ERROR, timeout);
 
     if (timeout) {
         FILETIME fts, fte;
