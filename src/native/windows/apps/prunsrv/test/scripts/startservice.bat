@@ -32,6 +32,9 @@ call mybanner starting
 %myserv% //ES//TestService
 if %errorlevel% neq 0 (
   echo "start failed"
+  %myserv% //PS//TestService
+  dir %mypath%
+  type %mypath%\*.log
   exit 1
 )
 EXIT /B 0
