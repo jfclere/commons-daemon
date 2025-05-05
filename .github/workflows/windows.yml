@@ -30,6 +30,9 @@ jobs:
     env: 
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: winbuild
       - name: Build
         shell: cmd
         run: |
