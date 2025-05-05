@@ -33,14 +33,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: winbuild
-      - name: Build
+      - name: Build prunsrv
         shell: cmd
         run: |
             call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=${{ matrix.arch }}
             cd src/native/windows/apps/prunsrv
             nmake CPU=X64
+      - name: Build prunmgr
+        shell: cmd
+        run: |
             cd src/native/windows/apps/prunmgr
             nmake CPU=X64
+      - name: Build jar
+        shell: cmd
+        run: |
+            set JAVA_HOME=%JAVA_HOME_21_X64%
+            mvn --batch-mode --no-transfer-progress install
       - name: Test
         shell: cmd
         run: |
