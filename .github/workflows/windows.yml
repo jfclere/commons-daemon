@@ -42,6 +42,7 @@ jobs:
       - name: Build prunmgr
         shell: cmd
         run: |
+            call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=${{ matrix.arch }}
             cd src/native/windows/apps/prunmgr
             nmake CPU=X64
       - name: Build jar
