@@ -42,7 +42,7 @@ SET mypath=%cd%
 WHERE /r ..\..\ prunsrv.exe 1>in.txt
 SET /p myserv=<in.txt
 WHERE /r ..\..\..\..\..\..\..\target *-tests.jar  1>in.txt
-SET /r myjar=<in.txt
+SET /p myjar=<in.txt
 ECHO "myserv: %myserv%"
 ECHO "myjar: %myjar%"
 ECHO "%mypath: %mypath%"
