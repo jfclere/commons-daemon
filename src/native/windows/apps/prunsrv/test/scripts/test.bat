@@ -132,6 +132,8 @@ icacls %mypath%\log /grant Everyone:F
 if %errorlevel% neq 0 (
   echo "install service with timeout 10 and 60+60 sec wait failed"
   %myserv% //PS//TestService
+  dir %mypath%
+  dir %mypath%\log
   type %mypath%\log\*.log
   exit 1
 )
