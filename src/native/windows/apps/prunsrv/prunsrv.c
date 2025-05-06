@@ -322,6 +322,7 @@ static BOOL redirectStdStreams(APX_STDWRAP *lpWrapper, LPAPXCMDLINE lpCmdline)
     if (GetConsoleWindow() == NULL) {
         HWND hc;
         AllocConsole();
+        apxLogWrite(APXLOG_MARK_INFO "Test");
         if ((hc = GetConsoleWindow()) != NULL)
             ShowWindow(hc, SW_HIDE);
     }
