@@ -224,9 +224,12 @@ call startservice
 call testservice
 call mybanner stopping
 %myserv% //SS//TestService
-if %errorlevel% neq 0 (
-  echo "jvm service tests 10 imeout and 60 wait failed"
+if %errorlevel% equ 0 (
+  echo "jvm service tests 10 timeout and 60 wait should have failed"
   %myserv% //PS//TestService
+  dir %mypath%
+  dir %mypath%\log
+  type %mypath%\log\*.log
   exit 1
 )
 call deleteservice
