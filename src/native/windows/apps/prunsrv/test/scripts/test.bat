@@ -81,6 +81,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "No timeout No wait stop failed"
+  %myserv% //PS//TestService
   exit 1
 )
 
@@ -115,6 +116,7 @@ call mybanner "stopping timeout 10 and wait 60"
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "timeout 10 and wait 60 failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
@@ -127,6 +129,7 @@ echo ""
 %myserv% //IS//TestService --Description="Procrun tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=exe --StartPath=%mypath% --StartImage=cmd.exe ++StartParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon" --StopMode=exe --StopPath=%mypath% --StopImage=cmd.exe ++StopParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon 4" --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto --StopTimeout 10
 if %errorlevel% neq 0 (
   echo "install service with timeout 10 and 60+60 sec wait failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call startservice
@@ -135,6 +138,7 @@ call mybanner "stopping service with timeout 10 and 60+60 sec wait"
 %myserv% //SS//TestService
 if %errorlevel% equ 0 (
   echo "timeout 10 and wait 60+60 should have failed"
+  %myserv% //PS//TestService
   exit 1
 )
 
@@ -143,6 +147,7 @@ rem procrun kills the child processes
 call waituntilstop
 if %errorlevel% neq 0 (
   echo "Not stopped"
+  %myserv% //PS//TestService
   exit 1
 )
 
@@ -154,6 +159,7 @@ if %errorlevel% equ 9 (
   if %errorlevel% neq 0 (
     echo "delete failed"
     echo "%errorlevel%"
+    %myserv% //PS//TestService
     exit 1
   )
 )
@@ -174,6 +180,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "java service tests timeout 10 and wait 60 failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
@@ -193,6 +200,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "jvm service tests notimeout and no wait failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
@@ -212,6 +220,7 @@ call mybanner stopping
 %myserv% //SS//TestService
 if %errorlevel% neq 0 (
   echo "jvm service tests 10 imeout and 60 wait failed"
+  %myserv% //PS//TestService
   exit 1
 )
 call deleteservice
