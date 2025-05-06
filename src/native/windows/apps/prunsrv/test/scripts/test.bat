@@ -192,6 +192,7 @@ call deleteservice
 rem install jvm service with notimeout and no wait
 echo ""
 echo "install jvm service with notimeout and no wait"
+echo "JAVA_HOME : %JAVA_HOME%"
 echo ""
 %myserv% //IS//TestService --Description="Procrun jvm tests" --DisplayName="Test Service" --Install=%myserv% --JavaHome %JAVA_HOME% --StartMode=jvm --StartPath=%mypath% --StartClass=org.apache.commons.daemon.ProcrunDaemon --StartMethod=start ++StartParams=procstart --StopMode=jvm --StopClass=org.apache.commons.daemon.ProcrunDaemon --StopMethod=stop ++StopParams 1 --Classpath=%myjar% --LogPath=%mypath% --LogLevel=Debug --StdOutput=auto --StdError=auto
 if %errorlevel% neq 0 (
