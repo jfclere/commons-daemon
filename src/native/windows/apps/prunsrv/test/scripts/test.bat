@@ -135,6 +135,7 @@ call mybanner "stopping service with timeout 10 and 60+60 sec wait"
 %myserv% //SS//TestService
 if %errorlevel% equ 0 (
   echo "timeout 10 and wait 60+60 should have failed"
+  %myserv% //PS//TestService
   exit 1
 )
 
