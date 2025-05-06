@@ -130,6 +130,7 @@ echo ""
 if %errorlevel% neq 0 (
   echo "install service with timeout 10 and 60+60 sec wait failed"
   %myserv% //PS//TestService
+  type *.log
   exit 1
 )
 call startservice
