@@ -131,10 +131,6 @@ icacls %mypath%\log /grant Everyone:F
 %myserv% //IS//TestService --Description="Procrun tests" --DisplayName="Test Service" --Install=%myserv% --StartMode=exe --StartPath=%mypath% --StartImage=cmd.exe ++StartParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon" --StopMode=exe --StopPath=%mypath% --StopImage=cmd.exe ++StopParams="/c java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon 4" --LogPath=%mypath%\log --LogLevel=Debug --StdOutput=auto --StdError=auto --StopTimeout 10
 if %errorlevel% neq 0 (
   echo "install service with timeout 10 and 60+60 sec wait failed"
-  %myserv% //PS//TestService
-  dir %mypath%
-  dir %mypath%\log
-  type %mypath%\log\*.log
   exit 1
 )
 call startservice
@@ -144,6 +140,9 @@ call mybanner "stopping service with timeout 10 and 60+60 sec wait"
 if %errorlevel% equ 0 (
   echo "timeout 10 and wait 60+60 should have failed"
   %myserv% //PS//TestService
+  dir %mypath%
+  dir %mypath%\log
+  type %mypath%\log\*.log
   exit 1
 )
 
