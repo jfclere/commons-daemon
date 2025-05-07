@@ -44,6 +44,7 @@ jobs:
     name: ${{ matrix.name }}
     env: 
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+      JAVA_HOME: "%JAVA_HOME_21_X64%"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -53,7 +54,7 @@ jobs:
         run: |
             echo "JAVA_HOME: %JAVA_HOME%"
             echo "JAVA_HOME_21_X64: %JAVA_HOME_21_X64%"
-            echo "VCPKG_BINARY_SOURCES %VCPKG_BINARY_SOURCES%"
+            echo "VCPKG_BINARY_SOURCES: %VCPKG_BINARY_SOURCES%"
       - name: Build prunsrv
         shell: cmd
         run: |
@@ -83,5 +84,7 @@ jobs:
         shell: cmd
         run: |
             echo "JAVA_HOME: %JAVA_HOME%"
+            echo "JAVA_HOME_21_X64: %JAVA_HOME_21_X64%"
+            echo "VCPKG_BINARY_SOURCES: %VCPKG_BINARY_SOURCES%"
             cd src/native/windows/apps/prunsrv/test/scripts
             test.bat
