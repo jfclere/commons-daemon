@@ -68,8 +68,13 @@ jobs:
         shell: cmd
         run: |
             mvn --batch-mode --no-transfer-progress install
+      - name: Use JAVA_HOME_21_X64
+        shell: cmd
+        run: |
+           echo "JAVA_HOME=%JAVA_HOME_21_X64% >> "$GITHUB_ENV"
       - name: Test
         shell: cmd
         run: |
+            echo "JAVA_HOME: %JAVA_HOME%"
             cd src/native/windows/apps/prunsrv/test/scripts
             test.bat
