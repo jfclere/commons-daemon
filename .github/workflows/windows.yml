@@ -33,10 +33,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest ]
-        java: [ 21 ]
-        experimental: [false]
-        arch: x64
+        include:
+          - name: Default
+            triplet: x64-windows
+            arch: x64
+            build-type: Debug
+            generator: "Ninja"
+            java: 21
 
     timeout-minutes: 30
     name: ${{ matrix.name }}
