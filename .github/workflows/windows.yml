@@ -52,7 +52,7 @@ jobs:
         shell: cmd
         run: |
             echo "set JAVA_HOME=%JAVA_HOME_21_X64%" > set_java_home.bat
-            call set_java_home.bat
+            call .\set_java_home.bat
             echo "JAVA_HOME: %JAVA_HOME%"
             echo "VCPKG_BINARY_SOURCES: %VCPKG_BINARY_SOURCES%"
       - name: Build prunsrv
