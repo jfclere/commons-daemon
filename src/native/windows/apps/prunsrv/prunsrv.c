@@ -1428,7 +1428,7 @@ cleanup:
         reportServiceStatus(SERVICE_STOP_PENDING, NO_ERROR, timeout);
     } else {
         /* something is wrong, the timeout is too small */
-        apxLogWrite(APXLOG_MARK_DEBUG "Waiting more than the specified timeout TEST (%d)", timeout);
+        apxLogWrite(APXLOG_MARK_DEBUG "Waiting more than the specified timeout re TEST (%d)", timeout);
         /* tell we fail */
         reportServiceStatus(SERVICE_STOP_PENDING, ERROR_SERVICE_REQUEST_TIMEOUT, 0);
     }
