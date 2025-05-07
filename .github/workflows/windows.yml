@@ -36,6 +36,7 @@ jobs:
         os: [ windows-latest ]
         java: [ 21 ]
         experimental: [false]
+        arch: x64
 
     timeout-minutes: 30
     name: ${{ matrix.name }}
