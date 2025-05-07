@@ -32,14 +32,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: Default
-            triplet: x64-windows
-            arch: x64
-            build-type: Debug
-            generator: "Ninja"
+        os: [ windows-latest ]
+        java: [ 21 ]
+        experimental: [false]
 
-    runs-on: windows-latest
     timeout-minutes: 30
     name: ${{ matrix.name }}
     env: 
@@ -61,14 +57,10 @@ jobs:
             cd src/native/windows/apps/prunmgr
             nmake CPU=X64
       - name: Build jar
-        env:
-            JAVA_HOME=%JAVA_HOME_21_X64%
         shell: cmd
         run: |
             mvn --batch-mode --no-transfer-progress install
       - name: Test
-        env:
-            JAVA_HOME=%JAVA_HOME_21_X64%
         shell: cmd
         run: |
             cd src/native/windows/apps/prunsrv/test/scripts
