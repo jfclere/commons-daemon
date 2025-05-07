@@ -55,8 +55,6 @@ jobs:
             echo set JAVA_HOME=%JAVA_HOME_21_X64%>> set_java_home.bat
             call .\set_java_home.bat
             echo "JAVA_HOME: %JAVA_HOME%"
-            echo "VCPKG_BINARY_SOURCES: %VCPKG_BINARY_SOURCES%"
-            type .\set_java_home.bat
       - name: Build prunsrv
         shell: cmd
         run: |
@@ -84,7 +82,5 @@ jobs:
         run: |
             call .\set_java_home.bat
             echo "JAVA_HOME: %JAVA_HOME%"
-            echo "JAVA_HOME_21_X64: %JAVA_HOME_21_X64%"
-            echo "VCPKG_BINARY_SOURCES: %VCPKG_BINARY_SOURCES%"
             cd src/native/windows/apps/prunsrv/test/scripts
             test.bat
