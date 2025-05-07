@@ -44,7 +44,6 @@ jobs:
     name: ${{ matrix.name }}
     env: 
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-      JAVA_HOME: "%JAVA_HOME_21_X64%"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,8 +51,9 @@ jobs:
       - name: Test JAVA_HOME
         shell: cmd
         run: |
+            echo "set JAVA_HOME=%JAVA_HOME_21_X64%" > set_java_home.bat
+            call set_java_home.bat
             echo "JAVA_HOME: %JAVA_HOME%"
-            echo "JAVA_HOME_21_X64: %JAVA_HOME_21_X64%"
             echo "VCPKG_BINARY_SOURCES: %VCPKG_BINARY_SOURCES%"
       - name: Build prunsrv
         shell: cmd
