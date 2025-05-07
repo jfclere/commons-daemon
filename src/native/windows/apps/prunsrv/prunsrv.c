@@ -1429,7 +1429,7 @@ cleanup:
     } else {
         /* something is wrong, the timeout is too small */
         apxLogWrite(APXLOG_MARK_DEBUG "Waiting more than the specified timeout (%d)", timeout);
-        /* tell we fail */
+        /* tell we fail, YES */
         reportServiceStatus(SERVICE_STOP_PENDING, ERROR_SERVICE_REQUEST_TIMEOUT, 0);
     }
         
