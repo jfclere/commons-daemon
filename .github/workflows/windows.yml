@@ -61,13 +61,15 @@ jobs:
             cd src/native/windows/apps/prunmgr
             nmake CPU=X64
       - name: Build jar
+        env:
+            JAVA_HOME=%JAVA_HOME_21_X64%
         shell: cmd
         run: |
-            set JAVA_HOME=%JAVA_HOME_21_X64%
             mvn --batch-mode --no-transfer-progress install
       - name: Test
+        env:
+            JAVA_HOME=%JAVA_HOME_21_X64%
         shell: cmd
         run: |
-            set JAVA_HOME=%JAVA_HOME_21_X64%
             cd src/native/windows/apps/prunsrv/test/scripts
             test.bat
