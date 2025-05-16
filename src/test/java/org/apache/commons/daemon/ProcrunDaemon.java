@@ -77,6 +77,16 @@ class ProcrunDaemon {
                         System.out.println(ex);
                     }
                     System.exit(0);
+                } else if (buf[0] == '5') {
+                    PrintStream myout = System.out;
+                    System.setOut(originalStdout);
+                    System.out.println("Using System.out");
+                    System.out.println("5");
+                    System.out.println("Back to redirection");
+                    System.setOut(myout);
+                } else if (buf[0] == '6') {
+                    System.err.println("Using System.err");
+                    System.err.println("6");
                 }
             }
             System.out.println("num " + num);
@@ -129,8 +139,11 @@ class ProcrunDaemon {
         System.exit(0);
     }
 
+    static PrintStream originalStdout;
+
     /* client server test for procrun */
     public static void main(String[] argv) {
+        originalStdout = System.out;
         if (argv.length != 0) {
             /* Just send the command to the server */
             try {
