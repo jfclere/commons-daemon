@@ -64,6 +64,10 @@ if %errorlevel% neq 0 (
 call startservice
 call testservice
 
+rem ask the service to write in stdoout and stderr
+java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon 5
+java  -cp %myjar% org.apache.commons.daemon.ProcrunDaemon 6
+
 rem the files:
 rem rw-r--r-- 1 Administrator None      0 Apr 28 00:55 testservice-stderr.2025-04-28.log
 rem rw-r--r-- 1 Administrator None      0 Apr 28 00:55 testservice-stdout.2025-04-28.log
