@@ -322,16 +322,13 @@ static BOOL redirectStdStreams(APX_STDWRAP *lpWrapper, LPAPXCMDLINE lpCmdline)
     if (GetConsoleWindow() == NULL) {
         HWND hc;
         AllocConsole();
-        apxLogWrite(APXLOG_MARK_INFO "JFCLERE after AllocConsole _fileno(stdout) %d", (_fileno)(stdout));
-        apxLogWrite(APXLOG_MARK_INFO "JFCLERE after AllocConsole _fileno(stderr) %d", (_fileno)(stderr));
         if ((hc = GetConsoleWindow()) != NULL) {
             FILE* fout = 0;
             FILE* ferr = 0;
             freopen_s(&fout, "CONOUT$", "w", stdout);
             freopen_s(&ferr, "CONOUT$", "w", stderr);
             ShowWindow(hc, SW_HIDE);
-            apxLogWrite(APXLOG_MARK_INFO "JFCLERE after new CONSOLE _fileno(stdout) %d", (_fileno)(stdout));
-            apxLogWrite(APXLOG_MARK_INFO "JFCLERE after new CONSOLE _fileno(stderr) %d", (_fileno)(stderr));
+            apxLogWrite(APXLOG_MARK_INFO "redirectStdStreams stdout and stderr reassigned");
         }
     }
     /* redirect to file or console */
@@ -356,20 +353,11 @@ static BOOL redirectStdStreams(APX_STDWRAP *lpWrapper, LPAPXCMDLINE lpCmdline)
         if ((lpWrapper->fpStdOutFile = _wfsopen(lpWrapper->szStdOutFilename,
                                                L"a",
                                                _SH_DENYNO))) {
-            apxLogWrite(APXLOG_MARK_INFO "JFCLERE before _fileno(stdout) %d", (_fileno)(stdout));
             int ret = _dup2(_fileno(lpWrapper->fpStdOutFile), (_fileno)(stdout));
             if (ret == -1)
-                apxLogWrite(APXLOG_MARK_INFO "PROBLEM _dup2 failed(1)");
-            apxLogWrite(APXLOG_MARK_INFO "JFCLERE after _fileno(stdout) %d", (_fileno)(stdout));
-            // *stdout = *lpWrapper->fpStdOutFile;
-            // apxLogWrite(APXLOG_MARK_INFO "JFCLERE after COPY _fileno(stdout) %d", (_fileno)(stdout));
+                apxLogWrite(APXLOG_MARK_ERROR "redirectStdStreams _dup2 failed on stdout");
             setvbuf(stdout, NULL, _IONBF, 0);
-            apxLogWrite(APXLOG_MARK_INFO "stdout JFCLERE");
-            fprintf(stdout, "stdout JFCLERE\n");
-            fflush(stdout);
             setvbuf(lpWrapper->fpStdOutFile, NULL, _IONBF, 0);
-            fprintf(lpWrapper->fpStdOutFile, "pWrapper->fpStdOutFile JFCLERE\n");
-            fflush(lpWrapper->fpStdOutFile);
         }
         else {
             lpWrapper->szStdOutFilename = NULL;
@@ -395,23 +383,21 @@ static BOOL redirectStdStreams(APX_STDWRAP *lpWrapper, LPAPXCMDLINE lpCmdline)
                                                _SH_DENYNO))) {
             int ret = _dup2(_fileno(lpWrapper->fpStdErrFile), (_fileno)(stderr));
             if (ret == -1)
-                apxLogWrite(APXLOG_MARK_INFO "PROBLEM _dup2 failed(2)");
-            // *stderr = *lpWrapper->fpStdErrFile;
+                apxLogWrite(APXLOG_MARK_ERROR "redirectStdStreams _dup2 failed to stderr");
             setvbuf(stderr, NULL, _IONBF, 0);
-            apxLogWrite(APXLOG_MARK_INFO "stderr JFCLERE");
-            fprintf(stderr, "stderr JFCLERE\n");
-            fflush(stderr);
+            setvbuf(lpWrapper->fpStdErrFile, NULL, _IONBF, 0);
         }
         else {
             lpWrapper->szStdOutFilename = NULL;
         }
     }
     else if (lpWrapper->fpStdOutFile) {
-        int ret = _dup2(_fileno(lpWrapper->fpStdOutFile), 2);
-        if (ret == -1)
-            apxLogWrite(APXLOG_MARK_INFO "PROBLEM _dup2 failed(3)");
-        *stderr = *lpWrapper->fpStdOutFile;
+         /* redirect stderr to stdout file */
+         int ret = _dup2(_fileno(lpWrapper->fpStdOutFile), (_fileno)(stderr));
+         if (ret == -1)
+             apxLogWrite(APXLOG_MARK_ERROR "redirectStdStreams _dup2 failed to stderr (redirect)");
          setvbuf(stderr, NULL, _IONBF, 0);
+         setvbuf(lpWrapper->fpStdOutFile, NULL, _IONBF, 0);
     }
     return TRUE;
 }
@@ -2231,11 +2217,11 @@ void __cdecl main(int argc, char **argv)
     gStdwrap.szLogPath = SO_LOGPATH;
     /* Only redirect when running as a service */
     if (lpCmdline->dwCmdIndex == 2) {
-        apxLogWrite(APXLOG_MARK_INFO "redirect!");
+        apxLogWrite(APXLOG_MARK_DEBUG "redirect!");
         gStdwrap.szStdOutFilename = SO_STDOUTPUT;
         gStdwrap.szStdErrFilename = SO_STDERROR;
     } else {
-        apxLogWrite(APXLOG_MARK_INFO "NO redirect! %d", lpCmdline->dwCmdIndex);
+        apxLogWrite(APXLOG_MARK_DEBUG "NO redirect!");
     }
     redirectStdStreams(&gStdwrap, lpCmdline);
     if (lpCmdline->dwCmdIndex == 2) {
